@@ -1,0 +1,19 @@
+{
+  "name": "java-play",
+  "version": "0.0.1",
+  "description": "Java Web Playground",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "John",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.1",
+    "http": "0.0.0",
+    "pug": "^2.0.0-rc.4",
+    "url": "^0.11.0",
+    "ws": "^3.2.0"
+  }
+}

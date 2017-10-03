@@ -1,0 +1,83 @@
+doctype html
+html
+  head
+    title Java Playground
+    style.
+      html, body {
+        height: 100%;
+      }
+
+      body {
+        box-sizing: border-box;
+        min-width: 720px;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+      }
+
+      section#header {
+        background-color: #ccc;
+        height: 40px;
+        padding: 8px;
+      }
+
+      section#content {
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      #left, #right {
+        box-sizing: border-box;
+        padding: 8px;
+      }
+
+      #left { padding-right: 0; }
+      #right { padding-left: 0; }
+
+      #editor, #output {
+        box-sizing: border-box;
+        border: 1px solid lightgray;
+        height: 100%;
+        margin: 0;
+      }
+
+      #output {
+        width: 100%;
+        padding: 8px;
+      }
+
+      .gutter {
+        background-color: transparent;
+
+        background-repeat: no-repeat;
+        background-position: 50%;
+      }
+
+      .gutter.gutter-horizontal {
+        cursor: col-resize;
+      }
+
+      .split, .gutter.gutter-horizontal {
+        height: 100%;
+        float: left;
+      }
+  body
+    section#header Buttons go here!
+    section#content
+      div#left.split
+        pre#editor
+      div#right.split
+        pre#output.split This is some output.
+    script(src="/js/ace/ace.js")
+    script.
+      var editor = ace.edit("editor");
+      editor.setTheme("ace/theme/tomorrow");
+      editor.session.setMode("ace/mode/java");
+      editor.setValue("public class Test {\n}", 1);
+    script(src="/js/split.min.js")
+    script.
+      Split(['#left', '#right'], {
+        gutterSize: 8,
+        cursor: 'col-resize'
+      })
