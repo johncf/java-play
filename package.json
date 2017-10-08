@@ -4,7 +4,7 @@
   "description": "Java Web Playground",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "node server.js"
   },
   "author": "John",
@@ -15,5 +15,8 @@
     "pug": "^2.0.0-rc.4",
     "url": "^0.11.0",
     "ws": "^3.2.0"
+  },
+  "devDependencies": {
+    "mocha": "^4.0"
   }
 }
