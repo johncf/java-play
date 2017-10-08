@@ -27,6 +27,15 @@ class UniqueQueue {
   get length() {
     return this.idQueue.length
   }
+
+  peek(index=0) {
+    if (this.length <= index) {
+      return undefined;
+    }
+    let id = this.idQueue[index];
+    let data = this.dataMap[id];
+    return [id, data];
+  }
 }
 
 module.exports = UniqueQueue;
