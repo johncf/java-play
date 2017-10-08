@@ -32,7 +32,7 @@ function setupClient(id, ws) {
     if (msgo && msgo.hasOwnProperty('source')) {
       ws.send(JSON.stringify({"status": "queued"}));
       compiler.queue(id, msgo.source, function(result) {
-        ws.send(JSON.stringify({"status": "done", "result": result}));
+        ws.send(JSON.stringify(result));
       });
     } else {
       ws.send(JSON.stringify({"error": "bad request"}));

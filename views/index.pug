@@ -88,6 +88,7 @@ html
       var ws = new WebSocket("ws://" + window.location.hostname + ":8081");
       var out = document.getElementById("output");
       ws.onmessage = function(e) {
+        console.log(e.data);
         out.innerText = e.data;
       }
       document.getElementById("compile").onclick = function() {
