@@ -15,6 +15,9 @@ class UniqueQueue {
 
   // time complexity: O(n)
   deQ() {
+    if (this.length == 0) {
+      return undefined;
+    }
     let id = this.idQueue.shift();
     let data = this.dataMap[id];
     delete this.dataMap[id];

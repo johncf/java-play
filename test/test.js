@@ -1,4 +1,4 @@
-var assert = require('assert');
+const assert = require('assert');
 describe('UniqueQueue', function() {
   const UQueue = require('../uq.js')
   it('should do simple queueing', function() {
@@ -11,6 +11,7 @@ describe('UniqueQueue', function() {
     assert.deepEqual([7, 'b'], testq.deQ());
     assert.deepEqual([3, 'c'], testq.deQ());
     assert.deepEqual([0, '0'], testq.deQ());
+    assert.strictEqual(undefined, testq.deQ());
   });
   it('should replace existing id and move to end of queue', function() {
     var testq = new UQueue();
@@ -21,5 +22,6 @@ describe('UniqueQueue', function() {
     assert.deepEqual([7, 'b'], testq.deQ());
     assert.deepEqual([5, 'c'], testq.deQ());
     assert.deepEqual([0, '0'], testq.deQ());
+    assert.strictEqual(undefined, testq.deQ());
   });
 });
