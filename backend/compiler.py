@@ -35,11 +35,11 @@ class Program:
             ecode = -9
         return (ecode, out, err)
 
-    def run(self, input_str=None):
+    def execute(self, stdins=None):
         proc = Popen(["java", self._name], cwd=self._dir.name, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         try:
             # FIXME stdout may be unbounded
-            out, err = proc.communicate(input_str, timeout=3)
+            out, err = proc.communicate(stdins, timeout=3)
             ecode = proc.returncode
         except TimeoutExpired:
             proc.kill()
