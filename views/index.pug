@@ -34,16 +34,20 @@ html
       #left { padding-right: 0; }
       #right { padding-left: 0; }
 
-      #editor, #output {
+      #editor, #output, #logs {
         box-sizing: border-box;
         border: 1px solid lightgray;
         height: 100%;
         margin: 0;
       }
 
-      #output {
+      #output, #logs {
         width: 100%;
         padding: 8px;
+      }
+
+      .hsplit, .vsplit {
+        box-sizing: border-box;
       }
 
       .gutter {
@@ -53,11 +57,15 @@ html
         background-position: 50%;
       }
 
+      .gutter.gutter-vertical {
+        cursor: row-resize;
+      }
+
       .gutter.gutter-horizontal {
         cursor: col-resize;
       }
 
-      .split, .gutter.gutter-horizontal {
+      .hsplit, .gutter.gutter-horizontal {
         height: 100%;
         float: left;
       }
@@ -66,10 +74,13 @@ html
     section#header
       button#compile Compile and Run
     section#content
-      div#left.split
+      div#left.hsplit
         pre#editor
-      div#right.split
-        pre#output.split Click "Compile and Run" when ready.
+      div#right.hsplit
+        div#rtop.vsplit
+          pre#logs Click "Compile and Run" when ready.
+        div#rbot.vsplit
+          pre#output Program output will show up here.
     script(src="/js/ace/ace.js")
     script.
       var editor = ace.edit("editor");
@@ -86,41 +97,43 @@ html
       editor.setValue(showCode, 1);
 
       var ws = new WebSocket("ws://" + window.location.hostname + ":8081");
+      var log = document.getElementById("logs");
       var out = document.getElementById("output");
 
       ws.onmessage = function(e) {
         var msg = JSON.parse(e.data);
         if (msg.status == 'queued') {
-          out.innerText = "Queued...\n";
+          log.innerText = "Queued...\n";
         } else if (msg.status == 'started') {
-          out.innerText += "Compiling...\n";
+          log.innerText += "Compiling...\n";
         } else if (msg.status == 'compiled') {
           if (msg.ecode == 0) {
-            out.innerText += "Compiled without errors";
+            log.innerText += "Compiled without errors";
             if (msg.log) {
-              out.innerText += ", with logs:\n";
-              out.innerText += msg.log;
+              log.innerText += ", with logs:\n";
+              log.innerText += msg.log;
             } else {
-              out.innerText += ".\n";
+              log.innerText += ".\n";
             }
             if (!msg.done) {
-              out.innerText += "Executing...\n";
+              log.innerText += "Executing...\n";
             }
           } else {
-            out.innerText += "Compiler exited with code " + msg.ecode + ".\n";
-            out.innerText += msg.log;
+            log.innerText += "Compiler exited with code " + msg.ecode + ".\n";
+            log.innerText += msg.log;
           }
         } else if (msg.status == 'executed') {
-          out.innerText += "Program exited with code " + msg.ecode + ", with output:\n";
+          log.innerText += "Program exited with code " + msg.ecode + ".\n";
           out.innerText += msg.out + msg.err;
         } else if (msg.status == 'error') {
-          out.innerText += "A fatal error occurred. Reason: " + msg.cause + "\n";
+          log.innerText += "A fatal error occurred. Reason: " + msg.cause + "\n";
         } else {
-          out.innerText += "Unrecognized response from server.\n";
+          log.innerText += "Unrecognized response from server.\n";
           console.log(msg);
         }
       }
       document.getElementById("compile").onclick = function() {
+        log.innerText = "";
         out.innerText = "";
         ws.send(JSON.stringify({ "source": editor.getValue() }));
       }
@@ -132,6 +145,9 @@ html
     script(src="/js/split.min.js")
     script.
       Split(['#left', '#right'], {
-        gutterSize: 8,
-        cursor: 'col-resize'
+        gutterSize: 8
+      })
+      Split(['#rtop', '#rbot'], {
+        direction: 'vertical',
+        gutterSize: 8
       })
