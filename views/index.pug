@@ -87,11 +87,41 @@ html
 
       var ws = new WebSocket("ws://" + window.location.hostname + ":8081");
       var out = document.getElementById("output");
+
       ws.onmessage = function(e) {
-        console.log(e.data);
-        out.innerText = e.data;
+        var msg = JSON.parse(e.data);
+        if (msg.status == 'queued') {
+          out.innerText = "Queued...\n";
+        } else if (msg.status == 'started') {
+          out.innerText += "Compiling...\n";
+        } else if (msg.status == 'compiled') {
+          if (msg.ecode == 0) {
+            out.innerText += "Compiled without errors";
+            if (msg.log) {
+              out.innerText += ", with logs:\n";
+              out.innerText += msg.log;
+            } else {
+              out.innerText += ".\n";
+            }
+            if (!msg.done) {
+              out.innerText += "Executing...\n";
+            }
+          } else {
+            out.innerText += "Compiler exited with code " + msg.ecode + ".\n";
+            out.innerText += msg.log;
+          }
+        } else if (msg.status == 'executed') {
+          out.innerText += "Program exited with code " + msg.ecode + ", with output:\n";
+          out.innerText += msg.out + msg.err;
+        } else if (msg.status == 'error') {
+          out.innerText += "A fatal error occurred. Reason: " + msg.cause + "\n";
+        } else {
+          out.innerText += "Unrecognized response from server.\n";
+          console.log(msg);
+        }
       }
       document.getElementById("compile").onclick = function() {
+        out.innerText = "";
         ws.send(JSON.stringify({ "source": editor.getValue() }));
       }
       window.onbeforeunload = function(e) {
