@@ -25,7 +25,7 @@ class Program:
         write_file(pjoin(self._dir.name, self._name + ".java"), source)
 
     def compile(self):
-        proc = Popen(["javac", self._name + ".java"], cwd=self._dir.name, stdout=PIPE, stderr=PIPE)
+        proc = Popen(["javac", "-Xlint", self._name + ".java"], cwd=self._dir.name, stdout=PIPE, stderr=PIPE)
         try:
             out, err = proc.communicate(timeout=5)
             ecode = proc.returncode

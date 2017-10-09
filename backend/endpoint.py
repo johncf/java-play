@@ -15,8 +15,10 @@ while True:
         p.cleanup()
     msg = json.loads(s.recv().decode('utf-8'))
     if 'seqnum' not in msg or 'source' not in msg:
-        s.send(json.dumps({'status': 'error', 'done': True}))
+        s.send(json.dumps({'status': 'error', 'cause': 'bad request', 'done': True}))
+        print("Got a bad request.")
         continue
+    print("Got a compilation request.")
     seqnum = msg['seqnum']
 
     s.send(json.dumps({
